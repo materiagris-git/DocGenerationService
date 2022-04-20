@@ -1,0 +1,5 @@
+packages/
+ServiceDocumentsGenerate/bin/
+ServiceDocumentsGenerate/obj/
+TestService/bin/
+TestService/obj/
