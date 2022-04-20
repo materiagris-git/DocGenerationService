@@ -46,10 +46,10 @@ namespace ServiceDocumentsGenerate
                     foreach (var format in formatsList)
                     {
                         // Nro de condicionado según el ramo
-                        var ncod_condicionado = new SlipPrintDA().GetCondicionado(format);
+                        format.NCOD_CONDICIONADO = new SlipPrintDA().GetCondicionado(format);
 
                         // Los procedures configurados para el condicionado
-                        var proceduresList = new SlipPrintDA().GetProcedureList(ncod_condicionado);
+                        var proceduresList = new SlipPrintDA().GetProcedureList(format.NCOD_CONDICIONADO);
 
                         if (proceduresList != null && proceduresList.Count > 0)
                         {
