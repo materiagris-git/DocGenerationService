@@ -35,7 +35,7 @@ namespace ServiceDocumentsGenerate
                 var state = new SlipPrintDA().GetStateProcess(job);
 
                 #region Codigo de prueba - Para probar cualquier cotizacion sin importar el estado
-                state = 0;
+                //state = 0;
                 #endregion
 
                 if (new int[] { Convert.ToInt32(PrintEnum.State.SIN_INCIAR), Convert.ToInt32(PrintEnum.State.ERROR) }.Contains(state))

@@ -82,6 +82,7 @@ namespace ServiceDocumentsGenerate
 
                     response = new PolicyPrintDA().PolicyGeneratePDF(generatePolicy, pathsList);
 
+                    // Ver como actualizarlo al final
                     if (response.NCODE == 1)
                     {
                         mensajeError = mensajeError + " " + response.SMESSAGE;
