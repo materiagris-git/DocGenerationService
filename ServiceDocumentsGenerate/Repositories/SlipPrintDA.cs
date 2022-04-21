@@ -232,7 +232,7 @@ namespace ServiceDocumentsGenerate.Repositories
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.Add("P_NID_COTIZACION", OracleDbType.Int64).Value = request.NID_COTIZACION;
                         cmd.Parameters.Add("P_NSTATE_DOC", OracleDbType.Int64).Value = request.NSTATE_DOC;
-                        cmd.Parameters.Add("P_SLOGERROR", OracleDbType.Int64).Value = request.SLOGERROR;
+                        cmd.Parameters.Add("P_SLOGERROR", OracleDbType.Varchar2).Value = request.SLOGERROR;
 
                         var P_NCODE = new OracleParameter("P_NCODE", OracleDbType.Int32, ParameterDirection.Output);
                         var P_SMESSAGE = new OracleParameter("P_SMESSAGE", OracleDbType.Varchar2, ParameterDirection.Output);

@@ -17,6 +17,7 @@ namespace ServiceDocumentsGenerate
         {
             ConfigurePolicyPrint(new ElapsedEventHandler(this.OnTimerExecutePolicyPrintProcess));
             ConfigureSlipPrint(new ElapsedEventHandler(this.OnTimerExecuteSlipPrintProcess));
+            //ConfigureReSendPE(new ElapsedEventHandler(this.OnTimerExecuteReSendPEProcess));
         }
 
         protected override void OnStop()
@@ -41,18 +42,29 @@ namespace ServiceDocumentsGenerate
             timer.Start();
         }
 
+        private void ConfigureReSendPE(ElapsedEventHandler method)
+        {
+            double interval = Convert.ToDouble(ConfigurationManager.AppSettings["IntervalValidateHour"]);
+            Timer timer = new Timer();
+            timer.Interval = interval;
+            timer.Elapsed += method;
+            timer.Start();
+        }
+
         public void OnTimerExecutePolicyPrintProcess(object sender, ElapsedEventArgs args)
         {
-            //ExecutePrintProcess();
             PolicyPrintJob.RunWorkerAsync();
         }
 
         public void OnTimerExecuteSlipPrintProcess(object sender, ElapsedEventArgs args)
         {
-            //ExecutePrintQuotationProcess();
             SlipPrintJob.RunWorkerAsync();
         }
 
+        public void OnTimerExecuteReSendPEProcess(object sender, ElapsedEventArgs args)
+        {
+            ReSendPE.RunWorkerAsync();
+        }
 
         private void PolicyPrintJob_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -62,6 +74,17 @@ namespace ServiceDocumentsGenerate
         private void SlipPrintJob_DoWork(object sender, DoWorkEventArgs e)
         {
             ExecutePrintSlipProcess();
+        }
+
+        private void ReSendPE_DoWork(object sender, DoWorkEventArgs e)
+        {
+            DateTime date = DateTime.Now;
+
+            //LogHelper.Exception(string.Format("Hora que marca el servidor:  {0} : ", date.ToString("HH:mm")), LogHelper.Paso.Start, String.Empty);
+            //if (date.ToString("HH:mm") == ConfigurationManager.AppSettings["ExecuteHourUpdate"].ToString())
+            //{
+                new ReSendPEProcess().ExecuteProcess();
+            //}
         }
 
         private void ExecutePolicyPrintProcess()

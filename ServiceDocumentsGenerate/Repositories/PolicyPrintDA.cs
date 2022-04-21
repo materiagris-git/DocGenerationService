@@ -67,7 +67,7 @@ namespace ServiceDocumentsGenerate.Repositories
                     {
                         cmd.Connection = cn;
                         IDataReader reader = null;
-                        cmd.CommandText = GenericProcedures.pkg_CargaMasivaPD + ".REA_FORMATOS_TEST";
+                        cmd.CommandText = GenericProcedures.pkg_CargaMasivaPD + ".REA_FORMATOS";
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.Add("P_NIDHEADERPROC", OracleDbType.Int32).Value = job.NIDHEADERPROC;
                         cmd.Parameters.Add("P_NIDDETAILPROC", OracleDbType.Int32).Value = job.NIDDETAILPROC;

@@ -297,9 +297,6 @@ namespace ServiceDocumentsGenerate.Util
         {
             try
             {
-                //ELog.save("zipFiles", "pathCertificateFileName" + pathCertificateFileName);
-                //ELog.save("zipFiles", "pathFileName" + pathFileName);
-
                 if (File.Exists(pathFileName))
                 {
                     File.Delete(pathFileName);
@@ -333,12 +330,10 @@ namespace ServiceDocumentsGenerate.Util
             string pathAttachedAnexos = pathPDF + "\\anexos\\";
             string pathAttachedTemp = pathPDF + "\\temp\\";
 
-
             if (File.Exists(pathPDF + "certificados.zip"))
             {
                 File.Delete(pathPDF + "certificados.zip");
             }
-
 
             try
             {
@@ -348,7 +343,6 @@ namespace ServiceDocumentsGenerate.Util
                 {
                     File.Delete(pathNameFilePDF);
                 }
-
 
                 if (!Directory.Exists(pathAttachedTemp))
                 {
@@ -408,11 +402,8 @@ namespace ServiceDocumentsGenerate.Util
                 List<string> listaDocsPaths = new List<string>();
                 foreach (var item in new DirectoryInfo(pathAttachedTemp).GetFiles().OrderBy(x => x.CreationTime).ToList())
                 {
-                    //try { ELog.save("ruta" + pathAttachedTemp + item.Name); } catch (Exception){ }
                     listaDocsPaths.Add(pathAttachedTemp + item.Name);
                 }
-
-                //try { ELog.save("listaDocsPaths llenado con rutas path:" + pathAttachedTemp); } catch (Exception) { }
 
                 var document = new PdfSharp.Pdf.PdfDocument();
                 foreach (string pdfFile in listaDocsPaths)
@@ -421,7 +412,7 @@ namespace ServiceDocumentsGenerate.Util
                     {
                         using (var inputPDFDocument = PdfSharp.Pdf.IO.PdfReader.Open(pdfFile, PdfDocumentOpenMode.Import))
                         {
-                            //document.Version = inputPDFDocument.Version;
+                            // document.Version = inputPDFDocument.Version;
                             foreach (PdfSharp.Pdf.PdfPage page in inputPDFDocument.Pages)
                             {
                                 document.AddPage(page);
@@ -460,7 +451,6 @@ namespace ServiceDocumentsGenerate.Util
                 Directory.Delete(pathAttachedTemp, true);
                 response.NCODE = 1;
                 response.SMESSAGE = "joinDocuments " + ex.Message;
-                //ELog.saveDocumentos(this, ex.ToString());
             }
 
             return response;
@@ -528,7 +518,6 @@ namespace ServiceDocumentsGenerate.Util
                 if (printGenerateBM != null)
                 {
                     string templateName = new PolicyPrintDA().GetTemplateName(printGenerateBM);
-                    //try { InsertLog(printGenerateBM.NPOLICY, "Consulta nombre Template (Poliza electronica)", "PrintPolicyDa/sendDocumentsService", JsonConvert.SerializeObject(printGenerateBM), nomPlan); } catch { }
                     templateName = string.IsNullOrEmpty(templateName) ? GetValueConfig("nombrePlanillaPL" + printGenerateBM.NBRANCH + printGenerateBM.NPRODUCT) : templateName;
 
                     var listDoc = new List<ReportDocPDF>();
@@ -575,26 +564,11 @@ namespace ServiceDocumentsGenerate.Util
                         rutaDirectorio = GetValueConfig("pathImpresion" + printGenerateBM.NBRANCH) + "" + printGenerateBM.NPOLICY + "\\" + printGenerateBM.NIDHEADERPROC + "\\" + printGenerateBM.STRANSAC + "\\" + printGenerateBM.DSTARTDATE + "\\";
                     }
 
-                    ////string rutaDirectorio = @"\\PRTSRV33\Documentos WS externo";
-                    //ELog.save(this, "rutaDirectorio: " + rutaDirectorio);
-                    //ELog.save(this, "informacionUsuarios: " + informacionUsuarios);
-                    //ELog.save(this, "informacionDocumentos: " + informacionDocumentos);
                     var jsonEPolicy = client.CargaDocumentoExterno(informacionDocumentos, informacionUsuarios, rutaDirectorio);
-                    //try { InsertLog(printGenerateBM.NPOLICY, "Envio de documentos (Poliza electronica)", "PrintPolicyDa/CargaDocumentoExterno/WsGenerarPDFexternoClient/CargaDocumentoExterno", "rutaDirectorio: " + rutaDirectorio + Environment.NewLine + "informacionUsuarios: " + informacionUsuarios + Environment.NewLine + "informacionDocumentos: " + informacionDocumentos, JsonConvert.SerializeObject(res)); } catch { }
                     var resEPolicy = JsonConvert.DeserializeObject<PolicyElecResponseVM>(jsonEPolicy, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-
 
                     response.NCODE = resEPolicy.Estatus == "ERROR" ? 1 : 0;
                     response.SMESSAGE = resEPolicy.Estatus == "ERROR" ? resEPolicy.Error + " | Ruta: " + rutaDirectorio : "Se envió correctamente a Póliza electrónica";
-
-                    //if (resEPolicy.Estatus == "ERROR") resEPolicy.Error = resEPolicy.Error + " | Ruta: " + rutaDirectorio;
-                    //if (resEPolicy.Estatus == "OK") resEPolicy.Estatus = resEPolicy.Estatus + " | Ruta: " + rutaDirectorio;
-                    //ELog.save(this, listUser[0].Documentos[0].nombre);
-                    //ELog.save(this, "InformacionDocumentos" + informacionDocumentos);
-                    //ELog.save(this, "informacionUsuarios" + informacionUsuarios);
-                    //ELog.save(this, "rutaDirectorio" + rutaDirectorio);
-                    //ELog.save(this, "error" + response.Error);
-                    //ELog.save(this, "poliza_electronica" + response.Estatus);
                 }
                 else
                 {

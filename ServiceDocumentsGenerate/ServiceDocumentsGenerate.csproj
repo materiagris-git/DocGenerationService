@@ -214,8 +214,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\PolicyGenericDA.cs" />
     <Compile Include="Repositories\PolicyPrintDA.cs" />
+    <Compile Include="Repositories\ReSendPeDA.cs" />
     <Compile Include="Repositories\SlipGenericDA.cs" />
     <Compile Include="Repositories\SlipPrintDA.cs" />
+    <Compile Include="ReSendPEProcess.cs" />
     <Compile Include="SlipPrintProcess.cs" />
     <Compile Include="Util\DataReaderExtensions.cs" />
     <Compile Include="Util\GenericMethods.cs" />

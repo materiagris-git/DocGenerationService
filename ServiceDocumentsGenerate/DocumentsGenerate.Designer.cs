@@ -30,9 +30,11 @@
         {
             this.PolicyPrintJob = new System.ComponentModel.BackgroundWorker();
             this.SlipPrintJob = new System.ComponentModel.BackgroundWorker();
+            this.ReSendPE = new System.ComponentModel.BackgroundWorker();
 
             this.PolicyPrintJob.DoWork += new System.ComponentModel.DoWorkEventHandler(this.PolicyPrintJob_DoWork);
             this.SlipPrintJob.DoWork += new System.ComponentModel.DoWorkEventHandler(this.SlipPrintJob_DoWork);
+            this.ReSendPE.DoWork += new System.ComponentModel.DoWorkEventHandler(this.ReSendPE_DoWork);
 
             this.ServiceName = "Generador de Documentos";
         }
@@ -41,5 +43,6 @@
 
         private System.ComponentModel.BackgroundWorker PolicyPrintJob;
         private System.ComponentModel.BackgroundWorker SlipPrintJob;
+        private System.ComponentModel.BackgroundWorker ReSendPE;
     }
 }
