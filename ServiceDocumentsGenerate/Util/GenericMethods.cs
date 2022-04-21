@@ -17,6 +17,7 @@ using ServiceDocumentsGenerate.Entities.ElectronicPolicy;
 using ServiceDocumentsGenerate.Repositories;
 using Newtonsoft.Json;
 using Word = NetOffice.WordApi;
+using System.Diagnostics;
 
 namespace ServiceDocumentsGenerate.Util
 {
@@ -585,5 +586,32 @@ namespace ServiceDocumentsGenerate.Util
 
             return response;
         }
+
+        #region Guardar Log
+        public static void saveLog(string obj, string msj)
+        {
+            try
+            {
+                string fecha = System.DateTime.Now.ToString("yyyyMMdd");
+                string hora = System.DateTime.Now.ToString("HH:mm:ss");
+                string path = "D:/log/GeneradorDocumentos/";
+                if (!Directory.Exists(path))
+                    Directory.CreateDirectory(path);
+                string pathName = path + fecha + ".txt";
+                StreamWriter sw = new StreamWriter(pathName, true);
+
+                StackTrace stacktrace = new StackTrace();
+                sw.WriteLine(obj + ": " + hora);
+                sw.WriteLine(stacktrace.GetFrame(1).GetMethod().Name + " - " + msj);
+                sw.WriteLine("");
+                sw.Flush();
+                sw.Close();
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+        #endregion
     }
 }

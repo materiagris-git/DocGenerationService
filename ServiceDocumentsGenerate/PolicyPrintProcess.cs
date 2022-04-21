@@ -1,4 +1,5 @@
-﻿using ServiceDocumentsGenerate.Entities;
+﻿using Newtonsoft.Json;
+using ServiceDocumentsGenerate.Entities;
 using ServiceDocumentsGenerate.Entities.PolicyPrint;
 using ServiceDocumentsGenerate.Repositories;
 using ServiceDocumentsGenerate.Util;
@@ -6,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ServiceDocumentsGenerate
@@ -17,6 +19,8 @@ namespace ServiceDocumentsGenerate
 
             var jobsList = new PolicyPrintDA().GetJobList();
 
+            saveLog("Inicio", JsonConvert.SerializeObject(jobsList));
+
             #region Codigo de prueba - Probar una poliza
             //var jobsList = new List<PolicyJobVM>();
             //var item = new PolicyJobVM()
@@ -27,18 +31,32 @@ namespace ServiceDocumentsGenerate
             //};
             //jobsList.Add(item);
             #endregion
-            
-            //Parallel.For(0, jobsList.Count, new ParallelOptions { MaxDegreeOfParallelism = jobsList.Count },
-            //    (i) =>
-            //    {
-            foreach (var job in jobsList)
+
+            Thread[] threads = new Thread[jobsList.Count];
+            for (int i = 0; i < threads.Count(); i++)
             {
-                var formatsList = new PolicyPrintDA().GetFormatList(job);
-
-                PolicyGenerate(formatsList, job);
+                var j = i;
+                var formatsList = new PolicyPrintDA().GetFormatList(jobsList[j]);
+                ThreadStart starter = delegate { PolicyGenerate(formatsList, jobsList[j]); };
+                threads[i] = new Thread(starter);
             }
-            //});
 
+            foreach (Thread thread in threads)
+            {
+                thread.Start();
+            }
+
+            foreach (Thread thread in threads)
+            {
+                thread.Join();
+            }
+
+            //foreach (var job in jobsList)
+            //{
+            //    var formatsList = new PolicyPrintDA().GetFormatList(job);
+
+            //    PolicyGenerate(formatsList, job);
+            //}
         }
 
         public PrintResponseVM PolicyGenerate(List<PolicyFormatVM> formatsList, PolicyJobVM job)
@@ -59,6 +77,7 @@ namespace ServiceDocumentsGenerate
             var generatePolicy = new PolicyPrintVM();
             string mensajeError = string.Empty;
             int index = 1;
+            var listError = new List<int>();
 
             foreach (var format in formatsList)
             {
@@ -82,8 +101,11 @@ namespace ServiceDocumentsGenerate
 
                     response = new PolicyPrintDA().PolicyGeneratePDF(generatePolicy, pathsList);
 
+                    listError.Add(response.NCODE);
+
                     // Ver como actualizarlo al final
-                    if (response.NCODE == 1)
+                    if (index == formatsList.Count &&
+                        listError.Contains(1))
                     {
                         mensajeError = mensajeError + " " + response.SMESSAGE;
                         response = generateObjUpdateState(generatePolicy, 2,
