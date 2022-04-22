@@ -1,4 +1,5 @@
-﻿using ServiceDocumentsGenerate.Entities;
+﻿using Newtonsoft.Json;
+using ServiceDocumentsGenerate.Entities;
 using ServiceDocumentsGenerate.Entities.SlipPrint;
 using ServiceDocumentsGenerate.Repositories;
 using ServiceDocumentsGenerate.Util;
@@ -7,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ServiceDocumentsGenerate
@@ -17,6 +19,8 @@ namespace ServiceDocumentsGenerate
         {
             // Jobs para generar Slip
             var jobsList = new SlipPrintDA().GetJobList();
+
+            saveLog("Inicio", JsonConvert.SerializeObject(jobsList), "SlipPrintProcess");
 
             #region Codigo de prueba - Probar una cotizacion
             //var jobsList = new List<SlipJobVM>();
@@ -29,10 +33,11 @@ namespace ServiceDocumentsGenerate
             //jobsList.Add(item);
             #endregion
 
-            foreach (var job in jobsList)
+            Thread[] threads = new Thread[jobsList.Count];
+            for (int i = 0; i < threads.Count(); i++)
             {
-                // Estado actual de la cotización
-                var state = new SlipPrintDA().GetStateProcess(job);
+                var j = i;
+                var state = new SlipPrintDA().GetStateProcess(jobsList[j]);
 
                 #region Codigo de prueba - Para probar cualquier cotizacion sin importar el estado
                 //state = 0;
@@ -40,36 +45,61 @@ namespace ServiceDocumentsGenerate
 
                 if (new int[] { Convert.ToInt32(PrintEnum.State.SIN_INCIAR), Convert.ToInt32(PrintEnum.State.ERROR) }.Contains(state))
                 {
-                    // Formatos configurados para la cotización
-                    var formatsList = new SlipPrintDA().GetFormatList(job);
+                    var formatsList = new SlipPrintDA().GetFormatList(jobsList[j]);
+                    ThreadStart starter = delegate { GenerateProcess(formatsList); };
+                    threads[i] = new Thread(starter);
+                }
+            }
 
-                    foreach (var format in formatsList)
+            foreach (Thread thread in threads)
+            {
+                thread.Start();
+            }
+
+            //foreach (var job in jobsList)
+            //{
+            //    // Estado actual de la cotización
+            //    var state = new SlipPrintDA().GetStateProcess(job);
+
+            //    #region Codigo de prueba - Para probar cualquier cotizacion sin importar el estado
+            //    //state = 0;
+            //    #endregion
+
+            //    if (new int[] { Convert.ToInt32(PrintEnum.State.SIN_INCIAR), Convert.ToInt32(PrintEnum.State.ERROR) }.Contains(state))
+            //    {
+            //        // Formatos configurados para la cotización
+
+            //    }
+            //}
+        }
+
+        public void GenerateProcess(List<SlipFormatVM> formatsList)
+        {
+            foreach (var format in formatsList)
+            {
+                // Nro de condicionado según el ramo
+                format.NCOD_CONDICIONADO = new SlipPrintDA().GetCondicionado(format);
+
+                // Los procedures configurados para el condicionado
+                var proceduresList = new SlipPrintDA().GetProcedureList(format.NCOD_CONDICIONADO);
+
+                if (proceduresList != null && proceduresList.Count > 0)
+                {
+                    var generateQuotation = new SlipPrintVM()
                     {
-                        // Nro de condicionado según el ramo
-                        format.NCOD_CONDICIONADO = new SlipPrintDA().GetCondicionado(format);
+                        NCOD_CONDICIONADO = format.NCOD_CONDICIONADO,
+                        PROCEDURE_LIST = proceduresList,
+                        NID_COTIZACION = format.NID_COTIZACION,
+                        NBRANCH = format.NBRANCH,
+                        NPRODUCT = format.NPRODUCT
+                    };
 
-                        // Los procedures configurados para el condicionado
-                        var proceduresList = new SlipPrintDA().GetProcedureList(format.NCOD_CONDICIONADO);
-
-                        if (proceduresList != null && proceduresList.Count > 0)
-                        {
-                            var generateQuotation = new SlipPrintVM()
-                            {
-                                NCOD_CONDICIONADO = format.NCOD_CONDICIONADO,
-                                PROCEDURE_LIST = proceduresList,
-                                NID_COTIZACION = format.NID_COTIZACION,
-                                NBRANCH = format.NBRANCH,
-                                NPRODUCT = format.NPRODUCT
-                            };
-
-                            var slipPrint = SlipGenerate(generateQuotation);
-                        }
-                    }
+                    var slipPrint = SlipGenerate(generateQuotation);
                 }
             }
         }
 
-        private PrintResponseVM SlipGenerate(SlipPrintVM generateQuotation)
+        public PrintResponseVM SlipGenerate(SlipPrintVM generateQuotation)
         {
             var response = new PrintResponseVM();
 

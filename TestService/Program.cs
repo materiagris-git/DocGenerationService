@@ -17,8 +17,8 @@ namespace TestService
             {
                 var wsProcess = new ServiceDocumentsGenerate.DocumentsGenerate();
                 //wsProcess.OnTimerExecuteSlipPrintProcess(null, null);
-                wsProcess.OnTimerExecutePolicyPrintProcess(null, null);
-                //wsProcess.OnTimerExecuteReSendPEProcess(null, null);
+                //wsProcess.OnTimerExecutePolicyPrintProcess(null, null);
+                wsProcess.OnTimerExecuteReSendPEProcess(null, null);
 
             }
             catch (Exception ex)

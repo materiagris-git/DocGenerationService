@@ -588,7 +588,7 @@ namespace ServiceDocumentsGenerate.Util
         }
 
         #region Guardar Log
-        public static void saveLog(string obj, string msj)
+        public static void saveLog(string obj, string msj, string process)
         {
             try
             {
@@ -597,7 +597,7 @@ namespace ServiceDocumentsGenerate.Util
                 string path = "D:/log/GeneradorDocumentos/";
                 if (!Directory.Exists(path))
                     Directory.CreateDirectory(path);
-                string pathName = path + fecha + ".txt";
+                string pathName = path + process + "_" + fecha + ".txt";
                 StreamWriter sw = new StreamWriter(pathName, true);
 
                 StackTrace stacktrace = new StackTrace();

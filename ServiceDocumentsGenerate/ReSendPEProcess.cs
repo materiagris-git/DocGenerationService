@@ -1,4 +1,5 @@
-﻿using ServiceDocumentsGenerate.Entities;
+﻿using Newtonsoft.Json;
+using ServiceDocumentsGenerate.Entities;
 using ServiceDocumentsGenerate.Entities.PolicyPrint;
 using ServiceDocumentsGenerate.Repositories;
 using ServiceDocumentsGenerate.Util;
@@ -6,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ServiceDocumentsGenerate
@@ -15,6 +17,8 @@ namespace ServiceDocumentsGenerate
         public void ExecuteProcess()
         {
             var jobsList = new ReSendPeDA().GetJobList();
+
+            saveLog("Inicio", JsonConvert.SerializeObject(jobsList), "ReSendPEProcess");
 
             #region Codigo de prueba - Probar una poliza
             //var jobsList = new List<PolicyJobVM>();
@@ -27,15 +31,33 @@ namespace ServiceDocumentsGenerate
             //jobsList.Add(item);
             #endregion
 
-            foreach (var job in jobsList)
-            {
-                var formatsList = new ReSendPeDA().GetFormatList(job);
 
+            Thread[] threads = new Thread[jobsList.Count];
+            for (int i = 0; i < threads.Count(); i++)
+            {
+                var j = i;
+                var formatsList = new PolicyPrintDA().GetFormatList(jobsList[j]);
                 if (formatsList.Count() > 0)
                 {
-                    PolicyGenerate(formatsList, job);
+                    ThreadStart starter = delegate { PolicyGenerate(formatsList, jobsList[j]); };
+                    threads[i] = new Thread(starter);
                 }
             }
+
+            foreach (Thread thread in threads)
+            {
+                thread.Start();
+            }
+
+            //foreach (var job in jobsList)
+            //{
+            //    var formatsList = new ReSendPeDA().GetFormatList(job);
+
+            //    if (formatsList.Count() > 0)
+            //    {
+            //        PolicyGenerate(formatsList, job);
+            //    }
+            //}
         }
 
         public PrintResponseVM PolicyGenerate(List<PolicyFormatVM> formatsList, PolicyJobVM job)

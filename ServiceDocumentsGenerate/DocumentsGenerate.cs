@@ -80,11 +80,10 @@ namespace ServiceDocumentsGenerate
         {
             DateTime date = DateTime.Now;
 
-            //LogHelper.Exception(string.Format("Hora que marca el servidor:  {0} : ", date.ToString("HH:mm")), LogHelper.Paso.Start, String.Empty);
-            //if (date.ToString("HH:mm") == ConfigurationManager.AppSettings["ExecuteHourUpdate"].ToString())
-            //{
+            if (date.ToString("HH:mm") == ConfigurationManager.AppSettings["ExecuteHourUpdate"].ToString())
+            {
                 new ReSendPEProcess().ExecuteProcess();
-            //}
+            }
         }
 
         private void ExecutePolicyPrintProcess()

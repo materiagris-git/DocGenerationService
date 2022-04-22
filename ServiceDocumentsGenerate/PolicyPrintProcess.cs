@@ -16,10 +16,10 @@ namespace ServiceDocumentsGenerate
     {
         public void ExecuteProcess()
         {
-
+            // Jobs para generar Documentos de Poliza
             var jobsList = new PolicyPrintDA().GetJobList();
 
-            saveLog("Inicio", JsonConvert.SerializeObject(jobsList));
+            saveLog("Inicio", JsonConvert.SerializeObject(jobsList), "PolicyPrintProcess");
 
             #region Codigo de prueba - Probar una poliza
             //var jobsList = new List<PolicyJobVM>();
@@ -46,10 +46,10 @@ namespace ServiceDocumentsGenerate
                 thread.Start();
             }
 
-            foreach (Thread thread in threads)
-            {
-                thread.Join();
-            }
+            //foreach (Thread thread in threads)
+            //{
+            //    thread.Join();
+            //}
 
             //foreach (var job in jobsList)
             //{
@@ -102,12 +102,12 @@ namespace ServiceDocumentsGenerate
                     response = new PolicyPrintDA().PolicyGeneratePDF(generatePolicy, pathsList);
 
                     listError.Add(response.NCODE);
-
+                    mensajeError = mensajeError + " " + response.SMESSAGE;
+                    
                     // Ver como actualizarlo al final
                     if (index == formatsList.Count &&
                         listError.Contains(1))
                     {
-                        mensajeError = mensajeError + " " + response.SMESSAGE;
                         response = generateObjUpdateState(generatePolicy, 2,
                                                       Convert.ToInt32(PrintEnum.State.ERROR),
                                                       mensajeError);
