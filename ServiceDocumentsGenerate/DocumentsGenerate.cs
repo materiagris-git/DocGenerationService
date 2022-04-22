@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.ServiceProcess;
 using System.Timers;
 using System.Configuration;
+using ServiceDocumentsGenerate.Util;
 
 namespace ServiceDocumentsGenerate
 {
@@ -80,10 +81,10 @@ namespace ServiceDocumentsGenerate
         {
             DateTime date = DateTime.Now;
 
-            if (date.ToString("HH:mm") == ConfigurationManager.AppSettings["ExecuteHourUpdate"].ToString())
-            {
+            //if (date.ToString("HH:mm") == ConfigurationManager.AppSettings["ExecuteHourUpdate"].ToString())
+            //{
                 new ReSendPEProcess().ExecuteProcess();
-            }
+            //}
         }
 
         private void ExecutePolicyPrintProcess()

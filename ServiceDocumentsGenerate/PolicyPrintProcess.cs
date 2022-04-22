@@ -19,18 +19,18 @@ namespace ServiceDocumentsGenerate
             // Jobs para generar Documentos de Poliza
             var jobsList = new PolicyPrintDA().GetJobList();
 
-            saveLog("Inicio", JsonConvert.SerializeObject(jobsList), "PolicyPrintProcess");
-
             #region Codigo de prueba - Probar una poliza
             //var jobsList = new List<PolicyJobVM>();
             //var item = new PolicyJobVM()
             //{
-            //    NIDHEADERPROC = 5299,
-            //    NIDDETAILPROC = 12028,
-            //    NIDFILECONFIG = 17
+            //    NIDHEADERPROC = 30568,
+            //    NIDDETAILPROC = 45913,
+            //    NIDFILECONFIG = 18
             //};
             //jobsList.Add(item);
             #endregion
+
+            saveLog("Inicio", JsonConvert.SerializeObject(jobsList), "PolicyPrintProcess");
 
             Thread[] threads = new Thread[jobsList.Count];
             for (int i = 0; i < threads.Count(); i++)
@@ -102,8 +102,8 @@ namespace ServiceDocumentsGenerate
                     response = new PolicyPrintDA().PolicyGeneratePDF(generatePolicy, pathsList);
 
                     listError.Add(response.NCODE);
-                    mensajeError = mensajeError + " " + response.SMESSAGE;
-                    
+                    mensajeError = response.NCODE == 1 ? mensajeError + " " + response.SMESSAGE : mensajeError;
+
                     // Ver como actualizarlo al final
                     if (index == formatsList.Count &&
                         listError.Contains(1))

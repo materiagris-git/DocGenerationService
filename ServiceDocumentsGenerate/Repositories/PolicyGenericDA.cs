@@ -1390,7 +1390,8 @@ namespace ServiceDocumentsGenerate.Repositories
                 }
 
                 response = response.NCODE == 0 ? policyFormat(generatePolicy, pathsList, genericView) : response;
-                response = response.NCODE == 0 ? SendElectronicPolicy(generatePolicy, pathsList.SNAME_TEMPLATE + ".pdf") : response;
+                
+                response = response.NCODE == 0 ? SendElectronicPolicy(generatePolicy, generatePolicy.NORDER.ToString().PadLeft(2, '0') + "_" + generatePolicy.SCONDICIONADO + ".pdf") : response;
             }
             catch (Exception ex)
             {

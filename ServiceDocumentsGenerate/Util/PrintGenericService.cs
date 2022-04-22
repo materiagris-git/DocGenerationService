@@ -18,11 +18,9 @@ namespace ServiceDocumentsGenerate.Util
             try
             {
                 UriBuilder builder = new UriBuilder(baseUrl + url);
-                //ELog.save("Servicio Get (URL)", baseUrl + url);
                 using (var httpClient = new HttpClient())
                 {
                     httpClient.Timeout = TimeSpan.FromMinutes(10);
-                    //LogHelper.Exception(string.Format("Get - {0} : ", 0), LogHelper.Paso.CreateDirectory, "Get toy aki");
 
                     httpClient.DefaultRequestHeaders.Clear();
                     httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

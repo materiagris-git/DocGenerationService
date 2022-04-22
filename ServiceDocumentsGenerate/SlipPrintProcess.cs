@@ -20,8 +20,6 @@ namespace ServiceDocumentsGenerate
             // Jobs para generar Slip
             var jobsList = new SlipPrintDA().GetJobList();
 
-            saveLog("Inicio", JsonConvert.SerializeObject(jobsList), "SlipPrintProcess");
-
             #region Codigo de prueba - Probar una cotizacion
             //var jobsList = new List<SlipJobVM>();
             //var item = new SlipJobVM()
@@ -32,6 +30,8 @@ namespace ServiceDocumentsGenerate
             //};
             //jobsList.Add(item);
             #endregion
+
+            saveLog("Inicio", JsonConvert.SerializeObject(jobsList), "SlipPrintProcess");
 
             Thread[] threads = new Thread[jobsList.Count];
             for (int i = 0; i < threads.Count(); i++)
