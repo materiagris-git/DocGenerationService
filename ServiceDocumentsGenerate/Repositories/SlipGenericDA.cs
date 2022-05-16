@@ -88,7 +88,7 @@ namespace ServiceDocumentsGenerate.Repositories
 
                 if (new string[] { GetValueConfig("accperBranch"), GetValueConfig("vgrupoBranch") }.Contains(codRamo))
                 {
-                    //    joinDocumentsQuotation(pathTempPDF, nameFilePDFFull);
+                    joinDocumentsQuotation(pathTempPDF, nameFilePDFFull);
                 }
 
                 response.PATH_PDF = pathTempPDF;

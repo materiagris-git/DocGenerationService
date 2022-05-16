@@ -59,6 +59,7 @@ namespace ServiceDocumentsGenerate.Util
             {
                 response.NCODE = 1;
                 response.SMESSAGE = ex.Message;
+                saveLog("RemoveAdvertising", ex.Message, "Error");
             }
 
             return response;
@@ -91,8 +92,9 @@ namespace ServiceDocumentsGenerate.Util
             }
             catch (Exception ex)
             {
-                response.NCODE = 1;
+                response.NCODE = 3;
                 response.SMESSAGE = ex.Message;
+                saveLog("ConvertWordToPdf", ex.Message, "Error");
             }
 
             return response;
@@ -339,11 +341,7 @@ namespace ServiceDocumentsGenerate.Util
             try
             {
                 string pathNameFilePDF = pathPDF + nameAttachedPdf;
-
-                if (File.Exists(pathNameFilePDF))
-                {
-                    File.Delete(pathNameFilePDF);
-                }
+                DeleteFile(pathNameFilePDF);
 
                 if (!Directory.Exists(pathAttachedTemp))
                 {
@@ -452,6 +450,89 @@ namespace ServiceDocumentsGenerate.Util
                 Directory.Delete(pathAttachedTemp, true);
                 response.NCODE = 1;
                 response.SMESSAGE = "joinDocuments " + ex.Message;
+            }
+
+            return response;
+        }
+
+        public PrintResponseVM joinDocumentsQuotation(string pathPDF, string nameAttachedPdf)
+        {
+            var response = new PrintResponseVM() { NCODE = 0 };
+
+            string pathAttachedTemp = pathPDF + "\\temp\\";
+
+            try
+            {
+                string pathNameFilePDF = pathPDF + nameAttachedPdf;
+                DeleteFile(pathNameFilePDF);
+
+                if (!Directory.Exists(pathAttachedTemp))
+                {
+                    Directory.CreateDirectory(pathAttachedTemp);
+                }
+                else
+                {
+                    Directory.Delete(pathAttachedTemp, true);
+                    Directory.CreateDirectory(pathAttachedTemp);
+                }
+
+                string[] fileDocuments = Directory.GetFiles(pathPDF);
+
+                foreach (var item in new DirectoryInfo(pathPDF).GetFiles().OrderByDescending(x => x.CreationTime).ToList())
+                {
+                    string fileToMove = pathPDF + item.Name;
+                    string moveTo = pathAttachedTemp + item.Name;
+                    File.Copy(fileToMove, moveTo);
+                }
+
+                List<string> listaDocsPaths = new List<string>();
+                foreach (var item in new DirectoryInfo(pathAttachedTemp).GetFiles().OrderBy(x => x.CreationTime).ToList())
+                {
+                    listaDocsPaths.Add(pathAttachedTemp + item.Name);
+                }
+
+                var document = new PdfSharp.Pdf.PdfDocument();
+                foreach (string pdfFile in listaDocsPaths)
+                {
+                    try
+                    {
+                        using (var inputPDFDocument = PdfSharp.Pdf.IO.PdfReader.Open(pdfFile, PdfDocumentOpenMode.Import))
+                        {
+                            foreach (PdfSharp.Pdf.PdfPage page in inputPDFDocument.Pages)
+                            {
+                                document.AddPage(page);
+                            }
+                        }
+                    }
+                    catch (Exception ex) { }
+                }
+
+                XFont font = new XFont("Verdana", 9);
+                XBrush brush = XBrushes.Black;
+                string noPages = document.Pages.Count.ToString();
+                for (int i = 0; i < document.Pages.Count; ++i)
+                {
+                    PdfSharp.Pdf.PdfPage page = document.Pages[i];
+                    XRect layoutRectangle = new XRect(240, page.Height - font.Height - 10, page.Width, font.Height);
+                    using (XGraphics gfx = XGraphics.FromPdfPage(page))
+                    {
+                        gfx.DrawString((i + 1).ToString(), font, brush, layoutRectangle, XStringFormats.Center);
+                    }
+                }
+
+                document.Save(pathNameFilePDF);
+                document.Dispose();
+                Directory.Delete(pathAttachedTemp, true);
+                foreach (string f in fileDocuments)
+                {
+                    File.Delete(f);
+                }
+            }
+            catch (Exception ex)
+            {
+                Directory.Delete(pathAttachedTemp, true);
+                response.NCODE = 1;
+                response.SMESSAGE = "joinDocumentsQuotation " + ex.Message;
             }
 
             return response;

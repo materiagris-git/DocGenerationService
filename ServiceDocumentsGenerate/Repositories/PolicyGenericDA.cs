@@ -1390,7 +1390,7 @@ namespace ServiceDocumentsGenerate.Repositories
                 }
 
                 response = response.NCODE == 0 ? policyFormat(generatePolicy, pathsList, genericView) : response;
-                
+
                 response = response.NCODE == 0 ? SendElectronicPolicy(generatePolicy, generatePolicy.NORDER.ToString().PadLeft(2, '0') + "_" + generatePolicy.SCONDICIONADO + ".pdf") : response;
             }
             catch (Exception ex)
@@ -1807,10 +1807,11 @@ namespace ServiceDocumentsGenerate.Repositories
             return response;
         }
 
-        public PrintResponseVM CertificatePDF(PolicyPrintVM generatePolicy, SlipPathVM pathsList)
+        public PrintResponseVM CertificatePDF(PolicyPrintVM generatePolicy, SlipPathVM pathsList, string msjUpdate)
         {
             var response = new PrintResponseVM() { NCODE = 0, SMESSAGE = "CertificatePDF: " };
             var genericView = new PolicyGeneralInfoVM();
+            int index = 1;
             //string spError = string.Empty;
 
             try
@@ -2046,10 +2047,15 @@ namespace ServiceDocumentsGenerate.Repositories
                             }
                         }
 
+                        generateObjUpdateState(generatePolicy, 1,
+                                               Convert.ToInt32(PrintEnum.State.EN_PROCESO),
+                                               msjUpdate + " | Estamos en el " + generatePolicy.SCONDICIONADO + " " + index + " de " + certificatesList.Count());
+
                         response = response.NCODE == 0 ? policyFormat(generatePolicy, pathsList, genericView) : response;
+                        index++;
                     }
 
-                    response = response.NCODE == 0 ? generarCuadroPoliza(generatePolicy, response) : response;
+                    response = response.NCODE == 0 ? generarCuadroPoliza(generatePolicy, response, msjUpdate) : response;
                 }
                 else
                 {
@@ -2071,7 +2077,7 @@ namespace ServiceDocumentsGenerate.Repositories
                         PATH_PDF_CERTIF = null
                     };
 
-                    response = generarCuadroPoliza(generatePolicy, paths);
+                    response = generarCuadroPoliza(generatePolicy, paths, msjUpdate);
                 }
 
             }
@@ -2130,7 +2136,7 @@ namespace ServiceDocumentsGenerate.Repositories
             return certificatesList;
         }
 
-        public PrintResponseVM generarCuadroPoliza(PolicyPrintVM printGenerateBM, PrintResponseVM paths)
+        public PrintResponseVM generarCuadroPoliza(PolicyPrintVM printGenerateBM, PrintResponseVM paths, string msjUpdate)
         {
             var response = new PrintResponseVM() { NCODE = 0 };
             var pathCertificatePDF = paths.PATH_PDF;
@@ -2140,6 +2146,11 @@ namespace ServiceDocumentsGenerate.Repositories
             {
                 if (formatOrderVM[0].NORDER == printGenerateBM.NORDER)
                 {
+                    generateObjUpdateState(printGenerateBM, 1,
+                                               Convert.ToInt32(PrintEnum.State.EN_PROCESO),
+                                               msjUpdate + " | Estamos generando el cuadro de póliza");
+
+
                     var NoProcesar = new string[] { "11863", "11867", "11868", "12257", "12076", "11865", "12253", "11869", "11864", "12078", "12252", "11870", "12077", "11871", "11866", "12258" }.ToList();
                     bool procesar = true;
 
@@ -2405,6 +2416,8 @@ namespace ServiceDocumentsGenerate.Repositories
                     response.PATH_PDF_CERTIF = pathTempPDF + "\\certificados\\";
                 }
 
+                response.NCODE = response.NCODE == 0 ? File.Exists(pathNameFilePDF) ? response.NCODE : 1 : response.NCODE;
+                response.SMESSAGE = File.Exists(pathNameFilePDF) ? response.SMESSAGE : "El documento no se ha generado";
                 response.PATH_PDF = response.NCODE == 0 ? pathTempPDF : null;
             }
             catch (Exception ex)
@@ -2424,6 +2437,7 @@ namespace ServiceDocumentsGenerate.Repositories
             try
             {
                 DeleteFile(pathNameFileTemplateTemp);
+                DeleteFile(pathNameFilePDF);
 
                 File.Copy(pathNameFileTemplate, pathNameFileTemplateTemp);
 

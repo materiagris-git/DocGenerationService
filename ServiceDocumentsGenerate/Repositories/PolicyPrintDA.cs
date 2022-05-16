@@ -373,36 +373,36 @@ namespace ServiceDocumentsGenerate.Repositories
         #endregion
 
         #region Inicio Zona Impresión
-        public PrintResponseVM PolicyGeneratePDF(PolicyPrintVM generatePolicy, List<SlipPathVM> pathsList)
+        public PrintResponseVM PolicyGeneratePDF(PolicyPrintVM generatePolicy, List<SlipPathVM> pathsList, string msjUpdate)
         {
             var response = new PrintResponseVM() { NCODE = 0 };
 
             if (new int[] { (int)PrintEnum.Condicionado_Poliza.SOLICITUD, (int)PrintEnum.Condicionado_Poliza.SOLICITUD_LEY,
-                                (int)PrintEnum.Condicionado_Poliza.SOLICITUD_COMPLETO, (int)PrintEnum.Condicionado_Poliza.SOLICITUD_ESPECIAL,
-                                (int)PrintEnum.Condicionado_Poliza.COVID_SOLICITUD,/* (int)PrintEnum.Condicionado_Poliza.AP_SOLICITUD,*/
-                                (int)PrintEnum.Condicionado_Poliza.SOLICITUD_SCTR, (int) PrintEnum.Condicionado_Poliza.SOLICITUD_SCTR_SIN_SUELDO,
-                                (int)PrintEnum.Condicionado_Poliza.SOLICITUD_AP, (int)PrintEnum.Condicionado_Poliza.SOLICITUD_VILP }.Contains((int)generatePolicy.NCOD_CONDICIONADO))
+                            (int)PrintEnum.Condicionado_Poliza.SOLICITUD_COMPLETO, (int)PrintEnum.Condicionado_Poliza.SOLICITUD_ESPECIAL,
+                            (int)PrintEnum.Condicionado_Poliza.COVID_SOLICITUD,/* (int)PrintEnum.Condicionado_Poliza.AP_SOLICITUD,*/
+                            (int)PrintEnum.Condicionado_Poliza.SOLICITUD_SCTR, (int) PrintEnum.Condicionado_Poliza.SOLICITUD_SCTR_SIN_SUELDO,
+                            (int)PrintEnum.Condicionado_Poliza.SOLICITUD_AP, (int)PrintEnum.Condicionado_Poliza.SOLICITUD_VILP }.Contains((int)generatePolicy.NCOD_CONDICIONADO))
             {
                 response = new PolicyGenericDA().RequestPDF(generatePolicy, pathsList[0]);
             }
             else if (new int[] { (int)PrintEnum.Condicionado_Poliza.CONDICIONES_PARTICULARES, (int)PrintEnum.Condicionado_Poliza.COVID_CON_PARTICULAR,
-                                    /* (int)PrintEnum.Condicionado_Poliza.AP_CON_PARTICULAR, */(int)PrintEnum.Condicionado_Poliza.CONDICIONES_PARTICULARES_SCTR,
-                                     (int)PrintEnum.Condicionado_Poliza.CONDICIONES_PARTICULARES_AP, (int)PrintEnum.Condicionado_Poliza.CONDICIONES_PARTICULARES_VG,
-                                     (int)PrintEnum.Condicionado_Poliza.CONDICIONES_PARTICULARES_VILP}.Contains((int)generatePolicy.NCOD_CONDICIONADO))
+                                 /*(int)PrintEnum.Condicionado_Poliza.AP_CON_PARTICULAR, */(int)PrintEnum.Condicionado_Poliza.CONDICIONES_PARTICULARES_SCTR,
+                                 (int)PrintEnum.Condicionado_Poliza.CONDICIONES_PARTICULARES_AP, (int)PrintEnum.Condicionado_Poliza.CONDICIONES_PARTICULARES_VG,
+                                 (int)PrintEnum.Condicionado_Poliza.CONDICIONES_PARTICULARES_VILP}.Contains((int)generatePolicy.NCOD_CONDICIONADO))
             {
                 response = new PolicyGenericDA().ParticularConditionsPDF(generatePolicy, pathsList[0]);
             }
             else if (new int[] { (int)PrintEnum.Condicionado_Poliza.CONDICIONES_GENERALES, (int)PrintEnum.Condicionado_Poliza.COVID_CON_GENERAL,
-                                     /*(int)PrintEnum.Condicionado_Poliza.AP_CON_GENERAL, */(int)PrintEnum.Condicionado_Poliza.CONDICIONES_GENERALES_SCTR,
-                                     (int)PrintEnum.Condicionado_Poliza.CONDICIONES_GENERALES_AP, (int)PrintEnum.Condicionado_Poliza.CONDICIONES_GENERALES_VG,
-                                     (int)PrintEnum.Condicionado_Poliza.CONDICIONES_GENERALES_VILP }.Contains((int)generatePolicy.NCOD_CONDICIONADO))
+                                 /*(int)PrintEnum.Condicionado_Poliza.AP_CON_GENERAL, */(int)PrintEnum.Condicionado_Poliza.CONDICIONES_GENERALES_SCTR,
+                                 (int)PrintEnum.Condicionado_Poliza.CONDICIONES_GENERALES_AP, (int)PrintEnum.Condicionado_Poliza.CONDICIONES_GENERALES_VG,
+                                 (int)PrintEnum.Condicionado_Poliza.CONDICIONES_GENERALES_VILP }.Contains((int)generatePolicy.NCOD_CONDICIONADO))
             {
                 response = new PolicyGenericDA().GeneralConditionsPDF(generatePolicy, pathsList[0]);
             }
             else if (new int[] { (int)PrintEnum.Condicionado_Poliza.CLAUSULAS_ADICIONALES, (int)PrintEnum.Condicionado_Poliza.CLAUSULAS_ADICIONALES_BASICO,
-                                     (int)PrintEnum.Condicionado_Poliza.CLAUSULAS_ADICIONALES_COMPLETO , (int)PrintEnum.Condicionado_Poliza.CLAUSULAS_ADICIONALES_ESPECIAL,
-                                     (int)PrintEnum.Condicionado_Poliza.COVID_CON_ESPECIAL, (int)PrintEnum.Condicionado_Poliza.CONDICIONES_ESPECIALES_AP,
-                                     (int)PrintEnum.Condicionado_Poliza.CONDICIONES_ESPECIALES_VG/*, (int)PrintEnum.Condicionado_Poliza.CONDICIONES_GENERALES_VILP*/}.Contains((int)generatePolicy.NCOD_CONDICIONADO))
+                                 (int)PrintEnum.Condicionado_Poliza.CLAUSULAS_ADICIONALES_COMPLETO , (int)PrintEnum.Condicionado_Poliza.CLAUSULAS_ADICIONALES_ESPECIAL,
+                                 (int)PrintEnum.Condicionado_Poliza.COVID_CON_ESPECIAL, (int)PrintEnum.Condicionado_Poliza.CONDICIONES_ESPECIALES_AP,
+                                 (int)PrintEnum.Condicionado_Poliza.CONDICIONES_ESPECIALES_VG/*, (int)PrintEnum.Condicionado_Poliza.CONDICIONES_GENERALES_VILP*/}.Contains((int)generatePolicy.NCOD_CONDICIONADO))
             {
                 //var formatsDetailVMs = GetFormatDetail(generatePolicy);
                 response = new PolicyGenericDA().DetailDocumentsPDF(generatePolicy, pathsList[0]);
@@ -412,16 +412,16 @@ namespace ServiceDocumentsGenerate.Repositories
                 response = new PolicyGenericDA().ElectronicPolicyPDF(generatePolicy, pathsList[0]);
             }
             else if (new int[] { (int)PrintEnum.Condicionado_Poliza.RESUMEN, (int)PrintEnum.Condicionado_Poliza.RESUMEN_BASICO,
-                                     (int)PrintEnum.Condicionado_Poliza.RESUMEN_COMPLETO, (int)PrintEnum.Condicionado_Poliza.RESUMEN_ESPECIAL,
-                                     (int)PrintEnum.Condicionado_Poliza.COVID_RESUMEN, /*(int)PrintEnum.Condicionado_Poliza.AP_RESUMEN,*/
-                                     (int)PrintEnum.Condicionado_Poliza.RESUMEN_SCTR, (int)PrintEnum.Condicionado_Poliza.RESUMEN_AP,
-                                     (int)PrintEnum.Condicionado_Poliza.RESUMEN_VG, (int)PrintEnum.Condicionado_Poliza.RESUMEN_VILP }.Contains((int)generatePolicy.NCOD_CONDICIONADO))
+                                 (int)PrintEnum.Condicionado_Poliza.RESUMEN_COMPLETO, (int)PrintEnum.Condicionado_Poliza.RESUMEN_ESPECIAL,
+                                 (int)PrintEnum.Condicionado_Poliza.COVID_RESUMEN, /*(int)PrintEnum.Condicionado_Poliza.AP_RESUMEN,*/
+                                 (int)PrintEnum.Condicionado_Poliza.RESUMEN_SCTR, (int)PrintEnum.Condicionado_Poliza.RESUMEN_AP,
+                                 (int)PrintEnum.Condicionado_Poliza.RESUMEN_VG, (int)PrintEnum.Condicionado_Poliza.RESUMEN_VILP }.Contains((int)generatePolicy.NCOD_CONDICIONADO))
             {
                 //var formatsDetailVMs = GetFormatDetail(generatePolicy);
                 response = new PolicyGenericDA().SummaryPDF(generatePolicy, pathsList[0]);
             }
             else if (new int[] { (int)PrintEnum.Condicionado_Poliza.CONSTANCIA_ASEGURADO, (int)PrintEnum.Condicionado_Poliza.CONSTANCIA_ASEGURADO_AP,
-                                     (int)PrintEnum.Condicionado_Poliza.CONSTANCIA_ASEGURADO_VG}.Contains((int)generatePolicy.NCOD_CONDICIONADO))
+                                 (int)PrintEnum.Condicionado_Poliza.CONSTANCIA_ASEGURADO_VG}.Contains((int)generatePolicy.NCOD_CONDICIONADO))
             {
                 response = new PolicyGenericDA().InsuredProofPDF(generatePolicy, pathsList[0]);
             }
@@ -431,21 +431,21 @@ namespace ServiceDocumentsGenerate.Repositories
                 response = GetStatePolicy(generatePolicy) == 1 ? new PolicyGenericDA().provisionalRecordPDF(generatePolicy, pathsList[0]) : new PrintResponseVM() { NCODE = 0 };
             }
             else if (new int[] { (int)PrintEnum.Condicionado_Poliza.CERTIFICADO, (int)PrintEnum.Condicionado_Poliza.CERTIFICADO_BASICO,
-                                     (int)PrintEnum.Condicionado_Poliza.CERTIFICADO_COMPLETO, (int)PrintEnum.Condicionado_Poliza.CERTIFICADO_ESPECIAL,
-                                     (int)PrintEnum.Condicionado_Poliza.COVID_CERTIFICADO,/* (int)PrintEnum.Condicionado_Poliza.AP_CERTIFICADO,*/
-                                     (int)PrintEnum.Condicionado_Poliza.CERTIFICADO_SCTR, (int)PrintEnum.Condicionado_Poliza.CERTIFICADO_AP,
-                                     (int)PrintEnum.Condicionado_Poliza.CERTIFICADO_VG, (int)PrintEnum.Condicionado_Poliza.SOLICITUD_CERTIFICADO_AP,
-                                     (int)PrintEnum.Condicionado_Poliza.SOLICITUD_VG }.Contains((int)generatePolicy.NCOD_CONDICIONADO))
+                                 (int)PrintEnum.Condicionado_Poliza.CERTIFICADO_COMPLETO, (int)PrintEnum.Condicionado_Poliza.CERTIFICADO_ESPECIAL,
+                                 (int)PrintEnum.Condicionado_Poliza.COVID_CERTIFICADO,/* (int)PrintEnum.Condicionado_Poliza.AP_CERTIFICADO,*/
+                                 (int)PrintEnum.Condicionado_Poliza.CERTIFICADO_SCTR, (int)PrintEnum.Condicionado_Poliza.CERTIFICADO_AP,
+                                 (int)PrintEnum.Condicionado_Poliza.CERTIFICADO_VG, (int)PrintEnum.Condicionado_Poliza.SOLICITUD_CERTIFICADO_AP,
+                                 (int)PrintEnum.Condicionado_Poliza.SOLICITUD_VG }.Contains((int)generatePolicy.NCOD_CONDICIONADO))
             {
                 //var formatsDetailVMs = GetFormatDetail(generatePolicy);
-                response = new PolicyGenericDA().CertificatePDF(generatePolicy, pathsList[0]);
+                response = new PolicyGenericDA().CertificatePDF(generatePolicy, pathsList[0], msjUpdate);
             }
             else if (new int[] { (int)PrintEnum.Condicionado_Poliza.ENDORSEMENT, (int)PrintEnum.Condicionado_Poliza.CONSTANCIA_INCLUSION_AP,
-                                     (int)PrintEnum.Condicionado_Poliza.CONSTANCIA_INCLUSION_VIAJES_AP, (int)PrintEnum.Condicionado_Poliza.CONSTANCIA_DECLARACION_AP,
-                                     (int)PrintEnum.Condicionado_Poliza.CONSTANCIA_MODIFICACION_AP, (int)PrintEnum.Condicionado_Poliza.CONSTANCIA_EXCLUSION_AP,
-                                     (int)PrintEnum.Condicionado_Poliza.CONSTANCIA_ANULACION_AP, (int)PrintEnum.Condicionado_Poliza.CONSTANCIA_EXCLUSION_VG,
-                                     (int)PrintEnum.Condicionado_Poliza.CONSTANCIA_INCLUSION_VG, (int)PrintEnum.Condicionado_Poliza.CONSTANCIA_DECLARACION_VG,
-                                     (int)PrintEnum.Condicionado_Poliza.CONSTANCIA_ANULACION_VG, (int)PrintEnum.Condicionado_Poliza.CONSTANCIA_MODIFICACION_VG }.Contains((int)generatePolicy.NCOD_CONDICIONADO))
+                                 (int)PrintEnum.Condicionado_Poliza.CONSTANCIA_INCLUSION_VIAJES_AP, (int)PrintEnum.Condicionado_Poliza.CONSTANCIA_DECLARACION_AP,
+                                 (int)PrintEnum.Condicionado_Poliza.CONSTANCIA_MODIFICACION_AP, (int)PrintEnum.Condicionado_Poliza.CONSTANCIA_EXCLUSION_AP,
+                                 (int)PrintEnum.Condicionado_Poliza.CONSTANCIA_ANULACION_AP, (int)PrintEnum.Condicionado_Poliza.CONSTANCIA_EXCLUSION_VG,
+                                 (int)PrintEnum.Condicionado_Poliza.CONSTANCIA_INCLUSION_VG, (int)PrintEnum.Condicionado_Poliza.CONSTANCIA_DECLARACION_VG,
+                                 (int)PrintEnum.Condicionado_Poliza.CONSTANCIA_ANULACION_VG, (int)PrintEnum.Condicionado_Poliza.CONSTANCIA_MODIFICACION_VG }.Contains((int)generatePolicy.NCOD_CONDICIONADO))
             {
                 response = new PolicyGenericDA().EndorsementPDF(generatePolicy, pathsList[0]);
             }

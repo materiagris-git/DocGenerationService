@@ -23,9 +23,9 @@ namespace ServiceDocumentsGenerate
             //var jobsList = new List<PolicyJobVM>();
             //var item = new PolicyJobVM()
             //{
-            //    NIDHEADERPROC = 30568,
-            //    NIDDETAILPROC = 45913,
-            //    NIDFILECONFIG = 18
+            //    NIDHEADERPROC = 31942,
+            //    NIDDETAILPROC = 47507,
+            //    NIDFILECONFIG = 17
             //};
             //jobsList.Add(item);
             #endregion
@@ -92,25 +92,30 @@ namespace ServiceDocumentsGenerate
 
                 if (proceduresList.Count > 0)
                 {
+
                     generatePolicy = generateObjPolicy(job, format, proceduresList);
+                    var msjUpdate = "Estamos en el formato " + index + " de " + formatsList.Count + " | Condicionado " + generatePolicy.SCONDICIONADO + " (" + generatePolicy.NCOD_CONDICIONADO + ")";
                     var pathsList = new SlipPrintDA().GetPathsList(generatePolicy.NCOD_CONDICIONADO, Convert.ToInt32(generatePolicy.NIDHEADERPROC));
 
-                    response = generateObjUpdateState(generatePolicy, 1,
-                                                      Convert.ToInt32(PrintEnum.State.EN_PROCESO),
-                                                      "Estamos en el formato " + index + " de " + formatsList.Count + " | Condicionado " + generatePolicy.SCONDICIONADO + " (" + generatePolicy.NCOD_CONDICIONADO + ")");
+                    generateObjUpdateState(generatePolicy, 1,
+                                           Convert.ToInt32(PrintEnum.State.EN_PROCESO),
+                                           msjUpdate);
 
-                    response = new PolicyPrintDA().PolicyGeneratePDF(generatePolicy, pathsList);
+                    response = new PolicyPrintDA().PolicyGeneratePDF(generatePolicy, pathsList, msjUpdate);
 
                     listError.Add(response.NCODE);
-                    mensajeError = response.NCODE == 1 ? mensajeError + " " + response.SMESSAGE : mensajeError;
+                    mensajeError = response.NCODE == 1 ? mensajeError + " " + response.SMESSAGE : response.NCODE == 3 ? mensajeError + " Problemas con el generador de clases COM para el componente con CLSID" : mensajeError;
+
+                    saveLog("Poliza N° " + generatePolicy.NPOLICY + " | NIDHEADERPROC: " + generatePolicy.NIDHEADERPROC, JsonConvert.SerializeObject(response), "Response");
 
                     // Ver como actualizarlo al final
                     if (index == formatsList.Count &&
-                        listError.Contains(1))
+                        (listError.Contains(1) || listError.Contains(3)))
                     {
-                        response = generateObjUpdateState(generatePolicy, 2,
-                                                      Convert.ToInt32(PrintEnum.State.ERROR),
-                                                      mensajeError);
+                        generateObjUpdateState(generatePolicy, 2,
+                                               Convert.ToInt32(PrintEnum.State.ERROR),
+                                               mensajeError);
+                        response.SEND_PE = true;
                     }
                 }
 
