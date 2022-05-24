@@ -435,7 +435,7 @@ namespace ServiceDocumentsGenerate.Repositories
                                  (int)PrintEnum.Condicionado_Poliza.COVID_CERTIFICADO,/* (int)PrintEnum.Condicionado_Poliza.AP_CERTIFICADO,*/
                                  (int)PrintEnum.Condicionado_Poliza.CERTIFICADO_SCTR, (int)PrintEnum.Condicionado_Poliza.CERTIFICADO_AP,
                                  (int)PrintEnum.Condicionado_Poliza.CERTIFICADO_VG, (int)PrintEnum.Condicionado_Poliza.SOLICITUD_CERTIFICADO_AP,
-                                 (int)PrintEnum.Condicionado_Poliza.SOLICITUD_VG }.Contains((int)generatePolicy.NCOD_CONDICIONADO))
+                                 (int)PrintEnum.Condicionado_Poliza.SOLICITUD_VG, (int)PrintEnum.Condicionado_Poliza.CERTIFICADO_VILP  }.Contains((int)generatePolicy.NCOD_CONDICIONADO))
             {
                 //var formatsDetailVMs = GetFormatDetail(generatePolicy);
                 response = new PolicyGenericDA().CertificatePDF(generatePolicy, pathsList[0], msjUpdate);

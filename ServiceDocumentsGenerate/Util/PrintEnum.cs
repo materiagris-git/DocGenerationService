@@ -124,6 +124,7 @@ namespace ServiceDocumentsGenerate.Util
             CONDICIONES_PARTICULARES_VILP = 103,
             RESUMEN_VILP = 104,
             SOLICITUD_VILP = 105,
+            CERTIFICADO_VILP = 107,
             /*FIN  RQ-VILP-POLICY */
 
             DEFAULT = 0
