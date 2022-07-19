@@ -23,9 +23,9 @@ namespace ServiceDocumentsGenerate
             //var jobsList = new List<PolicyJobVM>();
             //var item = new PolicyJobVM()
             //{
-            //    NIDHEADERPROC = 31942,
-            //    NIDDETAILPROC = 47507,
-            //    NIDFILECONFIG = 17
+            //    NIDHEADERPROC = 33390,
+            //    NIDDETAILPROC = 47029,
+            //    NIDFILECONFIG = 22
             //};
             //jobsList.Add(item);
             #endregion
@@ -37,6 +37,7 @@ namespace ServiceDocumentsGenerate
             {
                 var j = i;
                 var formatsList = new PolicyPrintDA().GetFormatList(jobsList[j]);
+                saveLog("formatsList", JsonConvert.SerializeObject(formatsList), "PolicyPrintProcess");
                 ThreadStart starter = delegate { PolicyGenerate(formatsList, jobsList[j]); };
                 threads[i] = new Thread(starter);
             }
@@ -82,7 +83,7 @@ namespace ServiceDocumentsGenerate
             foreach (var format in formatsList)
             {
                 #region Codigo de prueba - Probar un condicionado
-                //if (format.NCOD_CONDICIONADO != 7)
+                //if (format.NCOD_CONDICIONADO != 57)
                 //{
                 //    continue;
                 //}

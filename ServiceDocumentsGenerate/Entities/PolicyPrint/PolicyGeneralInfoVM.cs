@@ -1212,7 +1212,7 @@ namespace ServiceDocumentsGenerate.Entities.PolicyPrint
         public dynamic NCOMMI_BROKER { get; set; }
         public dynamic NCOMMI_PROMO { get; set; }
         public dynamic NCOMMI_COMER { get; set; }
-        public PrintRequestVM requestVM { get; set; }
+        public PrintRequestVM requestVM { get; set; } = new PrintRequestVM();
         public ParticularConditionsVM particularConditionsVM { get; set; }
         public PrintRequestInsuredVM requestInsuredVM { get; set; }
         public List<PrintRequestInsuredVM> insuredList = new List<PrintRequestInsuredVM>();

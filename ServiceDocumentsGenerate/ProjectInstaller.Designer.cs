@@ -36,19 +36,19 @@
             this.serviceProcessInstaller1.Username = null;
 
             #region Descripción Producción
-            this.serviceInstaller1.Description = "WSGeneradorDocumentos";
-            this.serviceInstaller1.DisplayName = "WSGeneradorDocumentos";
-            this.serviceInstaller1.ServiceName = "WSGeneradorDocumentos";
-            this.serviceInstaller1.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
-            this.serviceInstaller1.AfterInstall += new System.Configuration.Install.InstallEventHandler(this.serviceInstaller1_AfterInstall);
+            //this.serviceInstaller1.Description = "WSGeneradorDocumentos";
+            //this.serviceInstaller1.DisplayName = "WSGeneradorDocumentos";
+            //this.serviceInstaller1.ServiceName = "WSGeneradorDocumentos";
+            //this.serviceInstaller1.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
+            //this.serviceInstaller1.AfterInstall += new System.Configuration.Install.InstallEventHandler(this.serviceInstaller1_AfterInstall);
             #endregion
 
             #region Descripción Calidad - QA
-            //this.serviceInstaller1.Description = "WSGeneradorDocumentosQA";
-            //this.serviceInstaller1.DisplayName = "WSGeneradorDocumentosQA";
-            //this.serviceInstaller1.ServiceName = "WSGeneradorDocumentosQA";
-            //this.serviceInstaller1.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
-            //this.serviceInstaller1.AfterInstall += new System.Configuration.Install.InstallEventHandler(this.serviceInstaller1_AfterInstall);
+            this.serviceInstaller1.Description = "WSGeneradorDocumentosQA";
+            this.serviceInstaller1.DisplayName = "WSGeneradorDocumentosQA";
+            this.serviceInstaller1.ServiceName = "WSGeneradorDocumentosQA";
+            this.serviceInstaller1.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
+            this.serviceInstaller1.AfterInstall += new System.Configuration.Install.InstallEventHandler(this.serviceInstaller1_AfterInstall);
             #endregion
 
             #region Descripción Desarrollo 

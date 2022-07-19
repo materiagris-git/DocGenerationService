@@ -24,9 +24,9 @@ namespace ServiceDocumentsGenerate
             //var jobsList = new List<SlipJobVM>();
             //var item = new SlipJobVM()
             //{
-            //    NBRANCH = 73,
-            //    NPRODUCT = 1,
-            //    NID_COTIZACION = 26414
+            //    NBRANCH = 61,
+            //    NPRODUCT = 3,
+            //    NID_COTIZACION = 30226
             //};
             //jobsList.Add(item);
             #endregion

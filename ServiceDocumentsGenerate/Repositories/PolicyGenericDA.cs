@@ -1257,7 +1257,7 @@ namespace ServiceDocumentsGenerate.Repositories
 
                                     if (item.NORDER == 7)
                                     {
-                                        genericView.endorsementVM.requestVM = new PrintRequestVM();
+                                        //genericView.endorsementVM.requestVM = new PrintRequestVM();
                                         foreach (var obj in reader.ReadRowsList<PrintRequestInsuredVM>())
                                         {
                                             //genericView.endorsementVM.requestVM = new PrintRequestVM();
