@@ -220,12 +220,16 @@ namespace ServiceDocumentsGenerate.Util
 
                     //var resReference = await new GraphqlDA().getReferenceURL(codRamo, obj.COD_URL);
 
-                    if (!String.IsNullOrEmpty(resReference.data.referenceURL))
+                    if ( resReference.data !=null)
                     {
-                        using (System.Net.WebClient client = new System.Net.WebClient())
+                        if (!String.IsNullOrEmpty(resReference.data.referenceURL))
                         {
-                            client.DownloadFile(resReference.data.referenceURL, pathNameFilePDF);
+                            using (System.Net.WebClient client = new System.Net.WebClient())
+                            {
+                                client.DownloadFile(resReference.data.referenceURL, pathNameFilePDF);
+                            }
                         }
+                       
                     }
                 }
 
@@ -282,6 +286,12 @@ namespace ServiceDocumentsGenerate.Util
             response.coverAditionalNotSubItemList = new List<CertificateCoverVM>(coverList.Where(x => x.SCOVERUSE == "0").Where(x => !String.IsNullOrEmpty(x.NR)));
             response.coverLimitZeroList = new List<CertificateCoverVM>(coverList.Where(x => Convert.ToInt32(x.NCOVER_LIMIT) > 0));
             response.coverClauseList = new List<CertificateCoverVM>(generateClause(response.coverAditionalNotSubItemList));
+            var flagAdc = false;
+            flagAdc = response.coverAditionalList.Count > 0 ? true : false;
+            if (!flagAdc)
+            {
+                response.coverAditionalList.Add(new CertificateCoverVM { SDESCRIPT_COVER = "NO APLICA" });
+            }
 
             return response;
         }
