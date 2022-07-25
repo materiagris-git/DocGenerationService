@@ -286,11 +286,18 @@ namespace ServiceDocumentsGenerate.Util
             response.coverAditionalNotSubItemList = new List<CertificateCoverVM>(coverList.Where(x => x.SCOVERUSE == "0").Where(x => !String.IsNullOrEmpty(x.NR)));
             response.coverLimitZeroList = new List<CertificateCoverVM>(coverList.Where(x => Convert.ToInt32(x.NCOVER_LIMIT) > 0));
             response.coverClauseList = new List<CertificateCoverVM>(generateClause(response.coverAditionalNotSubItemList));
-            var flagAdc = false;
-            flagAdc = response.coverAditionalList.Count > 0 ? true : false;
-            if (!flagAdc)
+            
+            var listFlagAdc = new List<bool> {false,false };
+            listFlagAdc[0] = response.coverAditionalList.Count > 0 ? true : false;
+            listFlagAdc[1] = response.coverAditionalNotSubItemList.Count > 0 ? true : false;
+            if (!listFlagAdc[0])
             {
                 response.coverAditionalList.Add(new CertificateCoverVM { SDESCRIPT_COVER = "NO APLICA" });
+            }
+            
+            if (!listFlagAdc[1])
+            {
+                response.coverAditionalNotSubItemList.Add(new CertificateCoverVM { SDESCRIPT_COVER = "NO APLICA" });
             }
 
             return response;
